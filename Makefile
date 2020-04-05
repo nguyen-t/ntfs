@@ -3,7 +3,7 @@ HDREXT=.h
 SRCEXT=.c
 OBJEXT=.o
 CC=gcc
-LINKS=
+LIBS=
 SANS=undefined,address,leak
 WARNS=all pedantic extra
 OUTPUT=
@@ -20,7 +20,7 @@ INPUTS=$(basename $(shell ls $(SRCDIR)))
 HEADERS=$(addprefix $(HDRDIR)/, $(addsuffix $(HDREXT), $(DEPS)))
 SOURCES=$(addprefix $(SRCDIR)/, $(addsuffix $(SRCEXT), $(INPUTS)))
 OBJECTS=$(addprefix $(OBJDIR)/, $(addsuffix $(OBJEXT), $(INPUTS)))
-CFLAGS=$(addprefix -W, $(WARNS)) $(addprefix -l, $(LINKS)) -I$(HDRDIR) -c -o
+CFLAGS=$(addprefix -W, $(WARNS)) $(addprefix -l, $(LIBS)) -I$(HDRDIR) -c -o
 LDFLAGS=-fsanitize=$(SANS) -o
 
 .PHONY: all
