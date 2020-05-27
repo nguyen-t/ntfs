@@ -1,6 +1,6 @@
 # Edit to fit needs
 CC = gcc
-LIBS = 
+LIBS =
 DEFINES =
 SANS = undefined,address,leak
 WARNS = all pedantic extra
@@ -17,9 +17,9 @@ SRCEXT = .c
 OBJDIR = objects
 OBJEXT = .o
 TSTDIR = test
-DEPS = $(basename $(shell ls $(HDRDIR)))
+HEADERS = $(basename $(shell ls $(HDRDIR)))
 INPUTS = $(basename $(shell ls $(SRCDIR)))
-HEADERS = $(addprefix $(HDRDIR)/, $(addsuffix $(HDREXT), $(DEPS)))
+HEADERS = $(addprefix $(HDRDIR)/, $(addsuffix $(HDREXT), $(HEADERS)))
 SOURCES = $(addprefix $(SRCDIR)/, $(addsuffix $(SRCEXT), $(INPUTS)))
 OBJECTS = $(addprefix $(OBJDIR)/, $(addsuffix $(OBJEXT), $(INPUTS)))
 CFLAGS = $(addprefix -D, $(DEFINES)) -I$(HDRDIR) -c -o
@@ -31,11 +31,13 @@ LDFLAGS = -o
 .PHONY: run
 .PHONY: clean
 
+debug: DEFINES := DEBUG $(DEFINES)
 debug: CFLAGS := $(addprefix -W, $(WARNS)) $(CFLAGS)
 debug: LDFLAGS := -fsanitize=$(SANS) $(LDFLAGS)
 debug: build
 
-release: CFLAGS = $(OPTIMIZE) -DNDEBUG $(CFLAGS)
+release: DEFINES := NDEBUG $(DEFINES)
+release: CFLAGS := $(OPTIMIZE) $(CFLAGS)
 release:
 release: build
 
