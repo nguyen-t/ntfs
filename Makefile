@@ -38,7 +38,7 @@ debug: build
 
 release: DEFINES := NDEBUG $(DEFINES)
 release: CFLAGS := $(OPTIMIZE) $(CFLAGS)
-release:
+release: LDFLAGS:= $(LDFLAGS)
 release: build
 
 build: | $(HDRDIR) $(SRCDIR) $(OBJDIR) $(TSTDIR) $(OUTPUT)
