@@ -5,7 +5,7 @@ DEFINES =
 SANS = undefined,address,leak
 WARNS = all pedantic extra
 OPTIMIZE = -O3
-OUTPUT =
+OUTPUT = main
 EXEC = exec
 ARGS =
 
@@ -24,6 +24,9 @@ SOURCES = $(addprefix $(SRCDIR)/, $(addsuffix $(SRCEXT), $(INPUTS)))
 OBJECTS = $(addprefix $(OBJDIR)/, $(addsuffix $(OBJEXT), $(INPUTS)))
 CFLAGS = $(addprefix -D, $(DEFINES)) -I$(HDRDIR) -c -o
 LDFLAGS = -o
+
+# Calling run without building will build
+# without optimizations and debug flags
 
 .PHONY: debug
 .PHONY: release
