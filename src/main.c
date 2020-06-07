@@ -16,6 +16,8 @@ int main(void) {
 
   load_vbr(fd, boot);
 
+  printf("%s\n", boot->oem_id);
+
   free(boot);
 
   return 0;
