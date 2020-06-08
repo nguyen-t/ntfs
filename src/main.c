@@ -18,6 +18,7 @@ int main(void) {
   load_vbr(fd, boot);
   load_mft(fd, mft, boot);
 
+  printf("%ld", sizeof(VBR));
   printf("%s\n", boot->oem_id);
   printf("%016lX\n", *(uint64_t*) boot->ebpb.mft_cluster_number);
   for(int i = 0; i < 1024; i += 64) {
