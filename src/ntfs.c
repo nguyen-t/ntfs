@@ -68,11 +68,11 @@ int load_vbr(int fd, VBR* bs) {
 }
 
 int load_mft(int fd, char mft[1024], VBR* bs) {
-  uint16_t sector_size = *(uint16_t*) bs->bpb.bytes_per_sector;
-  uint8_t cluster_size = *(uint8_t*) bs->bpb.sectors_per_cluster;
-  uint64_t mft_cluster = *(uint64_t*) bs->ebpb.mft_cluster_number;
-  uint64_t mft_address = sector_size * cluster_size * mft_cluster;
+  uint16_t sector_size = *bs->bpb.bytes_per_sector;
+  uint8_t cluster_size = *bs->bpb.sectors_per_cluster;
+  uint64_t mft_cluster = *bs->ebpb.mft_cluster_number;
+  uint64_t mft_offset = sector_size * cluster_size * mft_cluster;
 
-  lseek(fd, mft_address, SEEK_SET);
+  lseek(fd, mft_offset, SEEK_SET);
   return read(fd, mft, 1024);
 }

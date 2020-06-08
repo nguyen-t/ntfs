@@ -19,23 +19,23 @@ typedef struct {
   uint8_t jump_instruction[3];
   uint8_t oem_id[8];
   struct {
-    uint8_t bytes_per_sector[2];
+    uint16_t bytes_per_sector[1];
     uint8_t sectors_per_cluster[1];
-    uint8_t reserved_sectors[2];
+    uint16_t reserved_sectors[1];
     uint8_t unused0[3];
     uint8_t unused1[2];
     uint8_t media_descriptor[1];
     uint8_t unused2[2];
-    uint8_t sectors_per_track[2];
-    uint8_t number_of_heads[2];
-    uint8_t hidden_sectors[4];
+    uint16_t sectors_per_track[1];
+    uint16_t number_of_heads[1];
+    uint32_t hidden_sectors[1];
     uint8_t unused3[4];
   } bpb;
   struct {
     uint8_t unused4[4];
-    uint8_t total_sectors[8];
-    uint8_t mft_cluster_number[8];
-    uint8_t mft_mirror_cluster_number[8];
+    uint64_t total_sectors[1];
+    uint64_t mft_cluster_number[1];
+    uint64_t mft_mirror_cluster_number[1];
     union {
       uint8_t bytes_per_file_record_segment[1];
       uint8_t clusters_per_file_record_segment[1];
@@ -46,8 +46,8 @@ typedef struct {
       uint8_t clusters_per_index_buffer[1];
     };
     uint8_t unused6[3];
-    uint8_t volume_serial_number[8];
-    uint8_t checksum[4];
+    uint64_t volume_serial_number[1];
+    uint32_t checksum[1];
   } ebpb;
   uint8_t bootstrap_code[426];
   uint8_t end_of_sector_marker[2];
