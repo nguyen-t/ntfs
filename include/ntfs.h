@@ -13,7 +13,8 @@
   #define error_code() printf("%s", strerror(errno))
 #endif
 
-// Partition Boot Sector structure
+// NTFS Boot Sector structure
+// Recast pointers to another data type
 typedef struct {
   uint8_t jump_instruction[3];
   uint8_t oem_id[8];
@@ -50,9 +51,9 @@ typedef struct {
   } ebpb;
   uint8_t bootstrap_code[426];
   uint8_t end_of_sector_marker[2];
-} Boot_Sector;
+} VBR;
 
-// Partition Boot Sector offset
+// NTFS Boot Sector offset
 typedef enum {
   JUMP_INSTRUCTION              = 0x0000u,
   OEM_ID                        = 0x0003u,
@@ -82,6 +83,7 @@ typedef enum {
 } Offset;
 
 // Function prototypes
-int load_vbr(int, Boot_Sector*);
+int load_vbr(int, VBR*);
+int load_mft(int, char[1024], VBR*);
 
 #endif

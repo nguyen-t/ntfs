@@ -5,7 +5,7 @@
 #define vbr_seek(offset) lseek(fd, offset, SEEK_SET)
 #define vbr_read(content) read(fd, content, sizeof(content))
 
-int load_vbr(int fd, Boot_Sector* bs) {
+int load_vbr(int fd, VBR* bs) {
   // Header
   if(vbr_seek(JUMP_INSTRUCTION) < 0) return -1;
   if(vbr_read(bs->jump_instruction) < 0) return -1;
@@ -65,4 +65,14 @@ int load_vbr(int fd, Boot_Sector* bs) {
   if(vbr_read(bs->end_of_sector_marker) < 0) return -1;
 
   return 0;
+}
+
+int load_mft(int fd, char mft[1024], VBR* bs) {
+  uint16_t sector_size = *(uint16_t*) bs->bpb.bytes_per_sector;
+  uint8_t cluster_size = *(uint8_t*) bs->bpb.sectors_per_cluster;
+  uint64_t mft_cluster = *(uint64_t*) bs->ebpb.mft_cluster_number;
+  uint64_t mft_address = sector_size * cluster_size * mft_cluster;
+
+  lseek(fd, mft_address, SEEK_SET);
+  return read(fd, mft, 1024);
 }
