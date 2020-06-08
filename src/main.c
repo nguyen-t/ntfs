@@ -18,9 +18,7 @@ int main(void) {
   load_vbr(fd, boot);
   load_mft(fd, mft, boot);
 
-  printf("%ld", sizeof(VBR));
-  printf("%s\n", boot->oem_id);
-  printf("%016lX\n", *(uint64_t*) boot->ebpb.mft_cluster_number);
+  printf("Partition type: %s\n", boot->oem_id);
   for(int i = 0; i < 1024; i += 64) {
     for(int j = 0; j < 64 && (i + j) < 1024; j++) {
       printf("%c", mft[i + j]);

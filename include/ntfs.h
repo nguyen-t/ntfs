@@ -14,7 +14,6 @@
 #endif
 
 // NTFS Boot Sector structure
-// Recast pointers to another data type
 typedef struct {
   uint8_t jump_instruction[3];
   uint8_t oem_id[8];
@@ -80,7 +79,7 @@ typedef enum {
   CHECKSUM                      = 0x0050u,
   BOOTSTRAP_CODE                = 0x0054u,
   END_OF_SECTOR_MARKER          = 0x01FEu
-} Offset;
+} VBR_Offset;
 
 // Function prototypes
 int load_vbr(int, VBR*);
