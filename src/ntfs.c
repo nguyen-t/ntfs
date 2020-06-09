@@ -68,6 +68,7 @@ int load_vbr(int fd, VBR* bs) {
 }
 
 int load_mft(int fd, char mft[1024], VBR* bs) {
+  // Calculate MFT location
   uint16_t sector_size = *bs->bpb.bytes_per_sector;
   uint8_t cluster_size = *bs->bpb.sectors_per_cluster;
   uint64_t mft_cluster = *bs->ebpb.mft_cluster_number;
