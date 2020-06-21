@@ -57,6 +57,7 @@ int main(int argc, char** argv) {
     return -1;
   }
 
+  #ifdef DEBUG
   printf("Partition type: %s\n", vbr->oem_id);
   for(int i = 0; i < 1024; i += 64) {
     for(int j = 0; j < 64 && (i + j) < 1024; j++) {
@@ -64,6 +65,7 @@ int main(int argc, char** argv) {
     }
     printf("\n");
   }
+  #endif
 
   free(mft);
   free(vbr);
