@@ -15,7 +15,7 @@ typedef enum {
   MBR_PARTITION_2    = 0x01CEu,
   MBR_PARTITION_3    = 0x01DEu,
   MBR_PARTITION_4    = 0x01EEu,
-  MBR_BOOT_SIGNATURE = 0x01FE
+  MBR_BOOT_SIGNATURE = 0x01FEu
 } MBR_Offset;
 
 typedef enum {
