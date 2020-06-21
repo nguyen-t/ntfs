@@ -1,5 +1,6 @@
-# NTFS Partition Project
+## About
+NTFS partition project.
 
-Usage:
-Compile: make
-Execute: sudo ./main [DEVICE]
+## Usage:
+> make</br>
+> sudo ./main \[DEVICE\]</br>
