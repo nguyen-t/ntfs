@@ -40,22 +40,22 @@ off_t get_ntfs_offset(int fd) {
   if(type[0] == NTFS_PARTITION_ID) {
     if(lseek(fd, MBR_PARTITION_1 + PARTITION_LBA, SEEK_SET) < 0) return -1;
     if(read(fd, &offset, sizeof(uint32_t)) < 0) return -1;
-    return offset * 512;
+    return offset * SECTOR_SIZE;
   }
   if(type[1] == NTFS_PARTITION_ID) {
     if(lseek(fd, MBR_PARTITION_2 + PARTITION_LBA, SEEK_SET) < 0) return -1;
     if(read(fd, &offset, sizeof(uint32_t)) < 0) return -1;
-    return offset * 512;
+    return offset * SECTOR_SIZE;
   }
   if(type[2] == NTFS_PARTITION_ID) {
     if(lseek(fd, MBR_PARTITION_3 + PARTITION_LBA, SEEK_SET) < 0) return -1;
     if(read(fd, &offset, sizeof(uint32_t)) < 0) return -1;
-    return offset * 512;
+    return offset * SECTOR_SIZE;
   }
   if(type[3] == NTFS_PARTITION_ID) {
     if(lseek(fd, MBR_PARTITION_4 + PARTITION_LBA, SEEK_SET) < 0) return -1;
     if(read(fd, &offset, sizeof(uint32_t)) < 0) return -1;
-    return offset * 512;
+    return offset * SECTOR_SIZE;
   }
 
   return -1;

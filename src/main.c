@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
-#include "mbr.h"
 #include "ntfs.h"
 
 int main(int argc, char** argv) {
