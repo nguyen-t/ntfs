@@ -2,6 +2,7 @@
 #define NTFS_H
 
 #include <stdint.h>
+#include <sys/types.h>
 
 // Debug stuff
 #ifdef NDEBUG
@@ -82,7 +83,7 @@ typedef enum {
 } VBR_Offset;
 
 // Function prototypes
-int load_vbr(int, VBR*);
-int load_mft(int, char[1024], VBR*);
+int load_vbr(int, VBR*, off_t);
+int load_mft(int, uint8_t[1024], VBR*, off_t);
 
 #endif
