@@ -17,6 +17,13 @@ int main(int argc, char** argv) {
     return -1;
   }
 
+  if(vbr == NULL || mft == NULL) {
+    perror("Failed to allocate memory\n");
+    free(mft);
+    free(vbr);
+    return -1;
+  }
+
   if((fd = open(argv[1], O_RDWR)) < 0) {
     perror("Failed to open device\n");
     free(mft);
