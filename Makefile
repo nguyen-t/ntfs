@@ -7,7 +7,7 @@ WARNS = all pedantic extra
 OPTIMIZE = -O3
 OUTPUT = main
 EXEC = exec
-ARGS = /dev/sda
+ARGS =
 
 # Shouldn't really be touched
 HDRDIR = include
