@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include <unistd.h>
 #include <sys/types.h>
-#include "ntfs.h"
+#include "vbr.h"
 #include "mft.h"
 
 int load_mft(int fd, uint8_t mft[1024], VBR* bs, off_t base) {

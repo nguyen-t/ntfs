@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include <unistd.h>
 #include <sys/types.h>
-#include "ntfs.h"
+#include "vbr.h"
 
 // Keep functions calls clean
 #define vbr_seek(offset) lseek(fd, offset, SEEK_SET)
