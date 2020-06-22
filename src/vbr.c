@@ -8,7 +8,10 @@
 #define vbr_read(content) read(fd, content, sizeof(content))
 
 int load_vbr(int fd, VBR* bs, off_t base) {
-  off_t start = lseek(fd, 0, SEEK_CUR);
+  off_t start;
+
+  if((start = lseek(fd, 0, SEEK_CUR)) < 0) return -1;
+
   // Header
   if(vbr_seek(JUMP_INSTRUCTION + base) < 0) return -1;
   if(vbr_read(bs->jump_instruction) < 0) return -1;
@@ -68,7 +71,7 @@ int load_vbr(int fd, VBR* bs, off_t base) {
   if(vbr_read(bs->end_of_sector_marker) < 0) return -1;
 
   // Reset file pointer
-  lseek(fd, start, SEEK_SET);
+  if(lseek(fd, start, SEEK_SET) < 0) return -1;
 
   return 0;
 }

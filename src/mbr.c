@@ -5,8 +5,10 @@
 #include "mbr.h"
 
 int mbr_check(int fd) {
-  off_t start = lseek(fd, 0, SEEK_CUR);
+  off_t start;
   uint16_t signature;
+
+  if((start = lseek(fd, 0, SEEK_CUR)) < 0) return -1;
 
   // Get MBR signature
   if(lseek(fd, MBR_BOOT_SIGNATURE, SEEK_SET) < 0) return -1;
@@ -19,9 +21,11 @@ int mbr_check(int fd) {
 }
 
 off_t get_ntfs_offset(int fd) {
-  off_t start = lseek(fd, 0, SEEK_CUR);
+  off_t start;
   uint8_t type[MAX_PARTITIONS];
   uint32_t offset;
+
+  if((start = lseek(fd, 0, SEEK_CUR)) < 0) return -1;
 
   // Get partition types for all partitions
   if(lseek(fd, MBR_PARTITION_1 + PARTITION_TYPE, SEEK_SET) < 0) return -1;
