@@ -4,46 +4,10 @@
 #include <stdint.h>
 #include <sys/types.h>
 
-// NTFS Boot Sector structure
-typedef struct {
-  uint8_t jump_instruction[3];
-  uint8_t oem_id[8];
-  struct {
-    uint16_t bytes_per_sector[1];
-    uint8_t sectors_per_cluster[1];
-    uint16_t reserved_sectors[1];
-    uint8_t unused0[3];
-    uint8_t unused1[2];
-    uint8_t media_descriptor[1];
-    uint8_t unused2[2];
-    uint16_t sectors_per_track[1];
-    uint16_t number_of_heads[1];
-    uint32_t hidden_sectors[1];
-    uint8_t unused3[4];
-  } bpb;
-  struct {
-    uint8_t unused4[4];
-    uint64_t total_sectors[1];
-    uint64_t mft_cluster_number[1];
-    uint64_t mft_mirror_cluster_number[1];
-    union {
-      uint8_t bytes_per_file_record_segment[1];
-      uint8_t clusters_per_file_record_segment[1];
-    };
-    uint8_t unused5[3];
-    union {
-      uint8_t bytes_per_index_buffer[1];
-      uint8_t clusters_per_index_buffer[1];
-    };
-    uint8_t unused6[3];
-    uint64_t volume_serial_number[1];
-    uint32_t checksum[1];
-  } ebpb;
-  uint8_t bootstrap_code[426];
-  uint8_t end_of_sector_marker[2];
-} VBR;
+#define VBR_SIZE 512
 
 // NTFS Boot Sector offset
+// Not used anymore
 typedef enum {
   JUMP_INSTRUCTION              = 0x0000u,
   OEM_ID                        = 0x0003u,
@@ -71,6 +35,48 @@ typedef enum {
   BOOTSTRAP_CODE                = 0x0054u,
   END_OF_SECTOR_MARKER          = 0x01FEu
 } VBR_Offset;
+
+// NTFS Boot Sector structure
+typedef union {
+  struct __attribute__((packed)) {
+    uint8_t jump_instruction[3];
+    uint8_t oem_id[8];
+    struct __attribute__((packed)) {
+      uint16_t bytes_per_sector[1];
+      uint8_t sectors_per_cluster[1];
+      uint16_t reserved_sectors[1];
+      uint8_t unused0[3];
+      uint8_t unused1[2];
+      uint8_t media_descriptor[1];
+      uint8_t unused2[2];
+      uint16_t sectors_per_track[1];
+      uint16_t number_of_heads[1];
+      uint32_t hidden_sectors[1];
+      uint8_t unused3[4];
+    } bpb;
+    struct __attribute__((packed)) {
+      uint8_t unused4[4];
+      uint64_t total_sectors[1];
+      uint64_t mft_cluster_number[1];
+      uint64_t mft_mirror_cluster_number[1];
+      union {
+        uint8_t bytes_per_file_record_segment[1];
+        uint8_t clusters_per_file_record_segment[1];
+      };
+      uint8_t unused5[3];
+      union {
+        uint8_t bytes_per_index_buffer[1];
+        uint8_t clusters_per_index_buffer[1];
+      };
+      uint8_t unused6[3];
+      uint64_t volume_serial_number[1];
+      uint32_t checksum[1];
+    } ebpb;
+    uint8_t bootstrap_code[426];
+    uint8_t end_of_sector_marker[2];
+  };
+  uint8_t raw[VBR_SIZE];
+} VBR;
 
 int load_vbr(int, VBR*, off_t);
 
