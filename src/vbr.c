@@ -3,8 +3,9 @@
 #include <sys/types.h>
 #include "vbr.h"
 
-int load_vbr(int fd, VBR* vbr, off_t base) {
+ssize_t load_vbr(int fd, VBR* vbr, off_t base) {
   off_t current;
+  ssize_t length;
 
   // Save current file pointer
   if((current = lseek(fd, 0, SEEK_CUR)) < 0) {
@@ -16,14 +17,12 @@ int load_vbr(int fd, VBR* vbr, off_t base) {
     return -1;
   }
 
-  if(read(fd, vbr->raw, sizeof(VBR)) < 0) {
-    return -1;
-  }
+  length = read(fd, vbr->raw, sizeof(VBR));
 
   // Reset file pointer
   if(lseek(fd, current, SEEK_SET) < 0) {
     return -1;
   }
 
-  return 0;
+  return length;
 }
