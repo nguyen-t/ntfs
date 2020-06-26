@@ -115,8 +115,9 @@ int main(int argc, char** argv) {
   printf("Partition type:   %s\n", vbr->oem_id);
   printf("NTFS start:       0x%08lx\n", ntfs_start);
   printf("MFT start:        0x%08lx\n", mft_start);
-  printf("MFT mirror start: 0x%08lx", mirror_start);
+  printf("MFT mirror start: 0x%08lx\n", mirror_start);
   printf("\n");
+  // printf("MFT\n");
   // for(int i = 0; i < 1024; i += 64) {
   //   for(int j = 0; j < 64 && (i + j) < 1024; j++) {
   //     printf("%c", mft->raw[i + j]);
