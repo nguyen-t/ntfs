@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 #include <sys/types.h>
-#include "ntfs.h"
+#include "vbr.h"
 
 #define MFT_SIZE 1024
 
