@@ -16,7 +16,6 @@ ssize_t vbr_read(int fd, VBR* vbr, off_t offset) {
   if(lseek(fd, offset, SEEK_SET) < 0) {
     return -1;
   }
-
   length = read(fd, vbr->raw, sizeof(VBR));
 
   // Reset file pointer
