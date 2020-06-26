@@ -92,7 +92,6 @@ int main(int argc, char** argv) {
     return -1;
   }
 
-
   if(mft_read(fd, mft, mft_start) < 0) {
     perror("Failed to read MFT\n");
     free(mbr);
