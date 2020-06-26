@@ -5,6 +5,8 @@
 #include "vbr.h"
 #include "mft.h"
 
+#define NTFS_PARTITION_ID 0x07u
+
 // Debug stuff
 #ifdef NDEBUG
   #define error_core() ((void) 0)
