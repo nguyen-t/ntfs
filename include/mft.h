@@ -12,7 +12,7 @@ typedef union {
   uint8_t raw[MFT_SIZE];
 } MFT;
 
-ssize_t mft_read(int, MFT*, VBR*, off_t);
-ssize_t mft_mirror_read(int, MFT*, VBR*, off_t);
+ssize_t mft_read(int, MFT*, off_t);
+ssize_t mft_mirror_read(int, MFT*, off_t);
 
 #endif

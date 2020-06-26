@@ -5,17 +5,11 @@
 
 int main(int argc, char** argv) {
   int fd;
-  off_t ntfs_start;
+  off_t ntfs_start, mft_start, mirror_start;
   MBR* mbr    = malloc(1 * sizeof(MBR));
   VBR* vbr    = malloc(1 * sizeof(VBR));
   MFT* mft    = malloc(1 * sizeof(MFT));
   MFT* mirror = malloc(1 * sizeof(MFT));
-
-  #ifdef DEBUG
-  printf("MBR size: %ld\n", sizeof(MBR));
-  printf("VBR size: %ld\n", sizeof(VBR));
-  printf("MFT size: %ld\n", sizeof(MFT));
-  #endif
 
   if(argc != 2) {
     perror("USAGE: ./main [DEVICE]\n");
@@ -26,7 +20,7 @@ int main(int argc, char** argv) {
     return -1;
   }
 
-  if(vbr == NULL || mft == NULL) {
+  if(!(mbr && vbr && mft && mirror)) {
     perror("Failed to allocate memory\n");
     free(mbr);
     free(vbr);
@@ -80,7 +74,26 @@ int main(int argc, char** argv) {
     return -1;
   }
 
-  if(mft_read(fd, mft, vbr, ntfs_start) < 0) {
+  if((mft_start = vbr_mft_offset(vbr, ntfs_start)) < 0) {
+    perror("Failed to read VBR\n");
+    free(mbr);
+    free(vbr);
+    free(mft);
+    free(mirror);
+    return -1;
+  }
+
+  if((mirror_start = vbr_mirror_offset(vbr, ntfs_start)) < 0) {
+    perror("Failed to read VBR\n");
+    free(mbr);
+    free(vbr);
+    free(mft);
+    free(mirror);
+    return -1;
+  }
+
+
+  if(mft_read(fd, mft, mft_start) < 0) {
     perror("Failed to read MFT\n");
     free(mbr);
     free(vbr);
@@ -89,7 +102,7 @@ int main(int argc, char** argv) {
     return -1;
   }
 
-  if(mft_mirror_read(fd, mirror, vbr, ntfs_start) < 0) {
+  if(mft_mirror_read(fd, mirror, mirror_start) < 0) {
     perror("Failed to read MFT mirror\n");
     free(mbr);
     free(vbr);
@@ -99,22 +112,24 @@ int main(int argc, char** argv) {
   }
 
   #ifdef DEBUG
-  printf("Partition type: %s\n", vbr->oem_id);
-  printf("NTFS start: %04lx\n", ntfs_start);
+  printf("Partition type:   %s\n", vbr->oem_id);
+  printf("NTFS start:       0x%08lx\n", ntfs_start);
+  printf("MFT start:        0x%08lx\n", mft_start);
+  printf("MFT mirror start: 0x%08lx", mirror_start);
   printf("\n");
-  for(int i = 0; i < 1024; i += 64) {
-    for(int j = 0; j < 64 && (i + j) < 1024; j++) {
-      printf("%c", mft->raw[i + j]);
-    }
-    printf("\n");
-  }
-  printf("MFT mirror\n");
-  for(int i = 0; i < 1024; i += 64) {
-    for(int j = 0; j < 64 && (i + j) < 1024; j++) {
-      printf("%c", mirror->raw[i + j]);
-    }
-    printf("\n");
-  }
+  // for(int i = 0; i < 1024; i += 64) {
+  //   for(int j = 0; j < 64 && (i + j) < 1024; j++) {
+  //     printf("%c", mft->raw[i + j]);
+  //   }
+  //   printf("\n");
+  // }
+  // printf("MFT mirror\n");
+  // for(int i = 0; i < 1024; i += 64) {
+  //   for(int j = 0; j < 64 && (i + j) < 1024; j++) {
+  //     printf("%c", mirror->raw[i + j]);
+  //   }
+  //   printf("\n");
+  // }
   #endif
 
   free(mbr);

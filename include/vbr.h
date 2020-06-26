@@ -49,5 +49,7 @@ typedef union {
 } VBR;
 
 ssize_t vbr_read(int, VBR*, off_t);
+off_t vbr_mft_offset(VBR*, off_t);
+off_t vbr_mirror_offset(VBR*, off_t);
 
 #endif

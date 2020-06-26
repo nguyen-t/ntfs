@@ -4,13 +4,9 @@
 #include "vbr.h"
 #include "mft.h"
 
-ssize_t mft_read(int fd, MFT* mft, VBR* vbr, off_t base) {
+ssize_t mft_read(int fd, MFT* mft, off_t offset) {
+  int bytes_read;
   off_t current;
-  ssize_t bytes_read;
-  uint16_t sector_size = vbr->bpb.bytes_per_sector;
-  uint8_t cluster_size = vbr->bpb.sectors_per_cluster;
-  uint64_t mft_cluster = vbr->ebpb.mft_cluster_number;
-  uint64_t mft_offset  = sector_size * cluster_size * mft_cluster + base;
 
   // Save current file pointer
   if((current = lseek(fd, 0, SEEK_CUR)) < 0) {
@@ -18,7 +14,7 @@ ssize_t mft_read(int fd, MFT* mft, VBR* vbr, off_t base) {
   }
 
   // Find and read MFT
-  if(lseek(fd, mft_offset, SEEK_SET) < 0)  {
+  if(lseek(fd, offset, SEEK_SET) < 0)  {
     return -1;
   }
   bytes_read = read(fd, mft->raw, sizeof(MFT));
@@ -31,13 +27,9 @@ ssize_t mft_read(int fd, MFT* mft, VBR* vbr, off_t base) {
   return bytes_read;
 }
 
-ssize_t mft_mirror_read(int fd, MFT* mft, VBR* vbr, off_t base) {
-  off_t current;
+ssize_t mft_mirror_read(int fd, MFT* mft, off_t offset) {
   int bytes_read;
-  uint16_t sector_size        = vbr->bpb.bytes_per_sector;
-  uint8_t cluster_size        = vbr->bpb.sectors_per_cluster;
-  uint64_t mft_mirror_cluster = vbr->ebpb.mft_mirror_cluster_number;
-  uint64_t mft_offset         = sector_size * cluster_size * mft_mirror_cluster + base;
+  off_t current;
 
   // Save current file pointer
   if((current = lseek(fd, 0, SEEK_CUR)) < 0) {
@@ -45,7 +37,7 @@ ssize_t mft_mirror_read(int fd, MFT* mft, VBR* vbr, off_t base) {
   }
 
   // Find and read MFT mirror
-  if(lseek(fd, mft_offset, SEEK_SET) < 0) {
+  if(lseek(fd, offset, SEEK_SET) < 0) {
     return -1;
   }
   bytes_read = read(fd, mft->raw, sizeof(MFT));

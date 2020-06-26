@@ -13,6 +13,7 @@ ssize_t mbr_read(int fd, MBR* mbr) {
     return -1;
   }
 
+  // Go to sector 0 and read MFT
   if(lseek(fd, 0, SEEK_SET) < 0) {
     return -1;
   }
