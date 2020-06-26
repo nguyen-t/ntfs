@@ -1,6 +1,11 @@
 #ifndef NTFS_H
 #define NTFS_H
 
+#if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+#else
+  #error Only little endian is supported
+#endif
+
 #include "mbr.h"
 #include "vbr.h"
 #include "mft.h"

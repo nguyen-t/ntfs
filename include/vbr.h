@@ -48,6 +48,6 @@ typedef union {
   uint8_t raw[VBR_SIZE];
 } VBR;
 
-ssize_t load_vbr(int, VBR*, off_t);
+ssize_t vbr_read(int, VBR*, off_t);
 
 #endif

@@ -4,7 +4,7 @@
 #include <sys/types.h>
 #include "mbr.h"
 
-ssize_t load_mbr(int fd, MBR* mbr) {
+ssize_t mbr_read(int fd, MBR* mbr) {
   off_t current;
   ssize_t length;
 
@@ -30,7 +30,7 @@ int mbr_check(MBR* mbr) {
   return mbr->boot_signature == VALID_SIGNATURE;
 }
 
-off_t get_partition_offset(MBR* mbr, uint8_t partition_id) {
+off_t mbr_partition_offset(MBR* mbr, uint8_t partition_id) {
   for(int i = 0; i < MAX_PARTITIONS; i++) {
     uint8_t type = mbr->partitions[i].type;
     off_t offset = mbr->partitions[i].lba;

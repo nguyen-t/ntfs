@@ -4,7 +4,7 @@
 #include "vbr.h"
 #include "mft.h"
 
-ssize_t load_mft(int fd, MFT* mft, VBR* vbr, off_t base) {
+ssize_t mft_read(int fd, MFT* mft, VBR* vbr, off_t base) {
   off_t current;
   ssize_t bytes_read;
   uint16_t sector_size = vbr->bpb.bytes_per_sector;
@@ -31,7 +31,7 @@ ssize_t load_mft(int fd, MFT* mft, VBR* vbr, off_t base) {
   return bytes_read;
 }
 
-ssize_t load_mft_mirror(int fd, MFT* mft, VBR* vbr, off_t base) {
+ssize_t mft_mirror_read(int fd, MFT* mft, VBR* vbr, off_t base) {
   off_t current;
   int bytes_read;
   uint16_t sector_size        = vbr->bpb.bytes_per_sector;

@@ -3,7 +3,7 @@
 #include <sys/types.h>
 #include "vbr.h"
 
-ssize_t load_vbr(int fd, VBR* vbr, off_t base) {
+ssize_t vbr_read(int fd, VBR* vbr, off_t base) {
   off_t current;
   ssize_t length;
 

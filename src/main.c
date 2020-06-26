@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
     return -1;
   }
 
-  if(load_mbr(fd, mbr) < 0) {
+  if(mbr_read(fd, mbr) < 0) {
     perror("Failed to read MBR\n");
     free(mbr);
     free(vbr);
@@ -62,7 +62,7 @@ int main(int argc, char** argv) {
     return -1;
   }
 
-  if((ntfs_start = get_partition_offset(mbr, NTFS_PARTITION_ID)) < 0) {
+  if((ntfs_start = mbr_partition_offset(mbr, NTFS_PARTITION_ID)) < 0) {
     perror("Failed to find NTFS partition\n");
     free(mbr);
     free(vbr);
@@ -71,7 +71,7 @@ int main(int argc, char** argv) {
     return -1;
   }
 
-  if(load_vbr(fd, vbr, ntfs_start) < 0) {
+  if(vbr_read(fd, vbr, ntfs_start) < 0) {
     perror("Failed to read VBR\n");
     free(mbr);
     free(vbr);
@@ -80,7 +80,7 @@ int main(int argc, char** argv) {
     return -1;
   }
 
-  if(load_mft(fd, mft, vbr, ntfs_start) < 0) {
+  if(mft_read(fd, mft, vbr, ntfs_start) < 0) {
     perror("Failed to read MFT\n");
     free(mbr);
     free(vbr);
@@ -89,7 +89,7 @@ int main(int argc, char** argv) {
     return -1;
   }
 
-  if(load_mft_mirror(fd, mirror, vbr, ntfs_start) < 0) {
+  if(mft_mirror_read(fd, mirror, vbr, ntfs_start) < 0) {
     perror("Failed to read MFT mirror\n");
     free(mbr);
     free(vbr);

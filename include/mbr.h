@@ -27,8 +27,8 @@ typedef union {
   uint8_t raw[MBR_SIZE];
 } MBR;
 
-ssize_t load_mbr(int, MBR*);
+ssize_t mbr_read(int, MBR*);
 int mbr_check(MBR*);
-off_t get_partition_offset(MBR*, uint8_t);
+off_t mbr_partition_offset(MBR*, uint8_t);
 
 #endif
