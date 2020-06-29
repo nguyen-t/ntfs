@@ -7,7 +7,7 @@
 #define MBR_SIZE          512
 #define SECTOR_SIZE       512
 #define MAX_PARTITIONS    4
-#define VALID_SIGNATURE   0xAA55u
+#define VALID_SIGNATURE   0xAA55
 
 typedef struct __attribute__((packed)) {
   uint8_t boot_status;

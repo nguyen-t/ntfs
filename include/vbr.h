@@ -43,7 +43,7 @@ typedef union {
       uint32_t checksum;
     } ebpb;
     uint8_t bootstrap_code[426];
-    uint8_t end_of_sector_marker[2];
+    uint16_t end_of_sector_marker;
   };
   uint8_t raw[VBR_SIZE];
 } VBR;
