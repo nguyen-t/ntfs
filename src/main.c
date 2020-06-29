@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <fcntl.h>
 #include "ntfs.h"
 
@@ -44,6 +45,7 @@ int main(int argc, char** argv) {
     free(vbr);
     free(mft);
     free(mirror);
+    close(fd);
     return -1;
   }
 
@@ -53,6 +55,7 @@ int main(int argc, char** argv) {
     free(vbr);
     free(mft);
     free(mirror);
+    close(fd);
     return -1;
   }
 
@@ -62,6 +65,7 @@ int main(int argc, char** argv) {
     free(vbr);
     free(mft);
     free(mirror);
+    close(fd);
     return -1;
   }
 
@@ -71,6 +75,7 @@ int main(int argc, char** argv) {
     free(vbr);
     free(mft);
     free(mirror);
+    close(fd);
     return -1;
   }
 
@@ -80,6 +85,7 @@ int main(int argc, char** argv) {
     free(vbr);
     free(mft);
     free(mirror);
+    close(fd);
     return -1;
   }
 
@@ -89,6 +95,7 @@ int main(int argc, char** argv) {
     free(vbr);
     free(mft);
     free(mirror);
+    close(fd);
     return -1;
   }
 
@@ -98,6 +105,7 @@ int main(int argc, char** argv) {
     free(vbr);
     free(mft);
     free(mirror);
+    close(fd);
     return -1;
   }
 
@@ -107,35 +115,15 @@ int main(int argc, char** argv) {
     free(vbr);
     free(mft);
     free(mirror);
+    close(fd);
     return -1;
   }
-
-  #ifdef DEBUG
-  printf("Partition type:   %s\n", vbr->oem_id);
-  printf("NTFS start:       0x%08lx\n", ntfs_start);
-  printf("MFT start:        0x%08lx\n", mft_start);
-  printf("MFT mirror start: 0x%08lx\n", mirror_start);
-  printf("\n");
-  // printf("MFT\n");
-  // for(int i = 0; i < 1024; i += 64) {
-  //   for(int j = 0; j < 64 && (i + j) < 1024; j++) {
-  //     printf("%c", mft->raw[i + j]);
-  //   }
-  //   printf("\n");
-  // }
-  // printf("MFT mirror\n");
-  // for(int i = 0; i < 1024; i += 64) {
-  //   for(int j = 0; j < 64 && (i + j) < 1024; j++) {
-  //     printf("%c", mirror->raw[i + j]);
-  //   }
-  //   printf("\n");
-  // }
-  #endif
 
   free(mbr);
   free(vbr);
   free(mft);
   free(mirror);
+  close(fd);
 
   return 0;
 }
