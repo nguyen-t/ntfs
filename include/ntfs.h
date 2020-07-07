@@ -9,6 +9,7 @@
 #include "mbr.h"
 #include "vbr.h"
 #include "mft.h"
+#include "attribute.h"
 
 #define NTFS_PARTITION_ID 0x07u
 

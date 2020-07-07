@@ -4,6 +4,13 @@
 #include "vbr.h"
 #include "mft.h"
 
+#ifdef DEBUG
+  #include <stdio.h>
+
+  // Keep print formatting consistent
+  #define pad_print(s) printf("%-25s ", (s))
+#endif
+
 ssize_t mft_read(int fd, MFT* mft, off_t offset) {
   int bytes_read;
   off_t current;
@@ -48,4 +55,9 @@ ssize_t mft_mirror_read(int fd, MFT* mft, off_t offset) {
   }
 
   return bytes_read;
+}
+
+int mft_check(MFT* mft) {
+  // Pointer magic
+  return *(uint32_t*) mft->magic_number == *(uint32_t*) MAGIC_NUMBER;
 }

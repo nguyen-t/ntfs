@@ -28,8 +28,6 @@ ssize_t vbr_read(int fd, VBR* vbr, off_t offset) {
   #ifdef DEBUG
     pad_print("Partition type:");
     printf("%s\n", vbr->oem_id);
-    pad_print("End of sector marker:");
-    printf("0x%04x\n", vbr->end_of_sector_marker);
   #endif
 
   // Reset file pointer

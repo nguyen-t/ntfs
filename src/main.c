@@ -6,27 +6,24 @@
 
 int main(int argc, char** argv) {
   int fd;
-  off_t ntfs_start, mft_start, mirror_start;
+  off_t ntfs_start, mft_start;
   MBR* mbr    = malloc(1 * sizeof(MBR));
   VBR* vbr    = malloc(1 * sizeof(VBR));
   MFT* mft    = malloc(1 * sizeof(MFT));
-  MFT* mirror = malloc(1 * sizeof(MFT));
 
   if(argc != 2) {
     perror("USAGE: ./main [DEVICE]\n");
     free(mbr);
     free(vbr);
     free(mft);
-    free(mirror);
     return -1;
   }
 
-  if(!(mbr && vbr && mft && mirror)) {
+  if(!(mbr && vbr && mft)) {
     perror("Failed to allocate memory\n");
     free(mbr);
     free(vbr);
     free(mft);
-    free(mirror);
     return -1;
   }
 
@@ -35,7 +32,6 @@ int main(int argc, char** argv) {
     free(mbr);
     free(vbr);
     free(mft);
-    free(mirror);
     return -1;
   }
 
@@ -44,7 +40,6 @@ int main(int argc, char** argv) {
     free(mbr);
     free(vbr);
     free(mft);
-    free(mirror);
     close(fd);
     return -1;
   }
@@ -54,7 +49,6 @@ int main(int argc, char** argv) {
     free(mbr);
     free(vbr);
     free(mft);
-    free(mirror);
     close(fd);
     return -1;
   }
@@ -64,7 +58,6 @@ int main(int argc, char** argv) {
     free(mbr);
     free(vbr);
     free(mft);
-    free(mirror);
     close(fd);
     return -1;
   }
@@ -74,7 +67,6 @@ int main(int argc, char** argv) {
     free(mbr);
     free(vbr);
     free(mft);
-    free(mirror);
     close(fd);
     return -1;
   }
@@ -84,17 +76,6 @@ int main(int argc, char** argv) {
     free(mbr);
     free(vbr);
     free(mft);
-    free(mirror);
-    close(fd);
-    return -1;
-  }
-
-  if((mirror_start = vbr_mirror_offset(vbr, ntfs_start)) < 0) {
-    perror("Failed to read VBR\n");
-    free(mbr);
-    free(vbr);
-    free(mft);
-    free(mirror);
     close(fd);
     return -1;
   }
@@ -104,25 +85,27 @@ int main(int argc, char** argv) {
     free(mbr);
     free(vbr);
     free(mft);
-    free(mirror);
     close(fd);
     return -1;
   }
 
-  if(mft_mirror_read(fd, mirror, mirror_start) < 0) {
-    perror("Failed to read MFT mirror\n");
+  if(!mft_check(mft)) {
+    perror("Failed MFT validation check\n");
     free(mbr);
     free(vbr);
     free(mft);
-    free(mirror);
     close(fd);
     return -1;
   }
+
+  attr_next(mft);
+  attr_next(NULL);
+  attr_next(NULL);
+  attr_next(NULL);
 
   free(mbr);
   free(vbr);
   free(mft);
-  free(mirror);
   close(fd);
 
   return 0;
