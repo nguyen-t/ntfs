@@ -18,7 +18,7 @@ typedef union {
     uint16_t hard_link_count;
     uint16_t attribute_offset;
     uint16_t flags;
-    uint32_t used_size;
+    uint32_t real_size;
     uint32_t allocated_size;
     uint64_t base_reference;
     uint16_t next_attribute_id;
@@ -29,8 +29,10 @@ typedef union {
   uint8_t raw[MFT_SIZE];
 } MFT;
 
-ssize_t mft_read(int, MFT*, off_t);
-ssize_t mft_mirror_read(int, MFT*, off_t);
+MFT* mft_read(int, off_t);
+MFT* mft_mirror_read(int, off_t);
 int mft_check(MFT*);
+int mft_directory(MFT*);
+int mft_deleted(MFT*);
 
 #endif

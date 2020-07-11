@@ -4,42 +4,30 @@
 #include <fcntl.h>
 #include "ntfs.h"
 
+#ifdef DEBUG
+  // Keep print formatting consistent
+  #define pad_print(s) printf("%-25s ", (s))
+#endif
+
 int main(int argc, char** argv) {
   int fd;
   off_t ntfs_start, mft_start;
-  MBR* mbr    = malloc(1 * sizeof(MBR));
-  VBR* vbr    = malloc(1 * sizeof(VBR));
-  MFT* mft    = malloc(1 * sizeof(MFT));
+  MBR* mbr;
+  VBR* vbr;
+  MFT* mft;
 
   if(argc != 2) {
     perror("USAGE: ./main [DEVICE]\n");
-    free(mbr);
-    free(vbr);
-    free(mft);
-    return -1;
-  }
-
-  if(!(mbr && vbr && mft)) {
-    perror("Failed to allocate memory\n");
-    free(mbr);
-    free(vbr);
-    free(mft);
     return -1;
   }
 
   if((fd = open(argv[1], O_RDWR)) < 0) {
     perror("Failed to open device\n");
-    free(mbr);
-    free(vbr);
-    free(mft);
     return -1;
   }
 
-  if(mbr_read(fd, mbr) < 0) {
+  if((mbr = mbr_read(fd)) == NULL) {
     perror("Failed to read MBR\n");
-    free(mbr);
-    free(vbr);
-    free(mft);
     close(fd);
     return -1;
   }
@@ -47,8 +35,6 @@ int main(int argc, char** argv) {
   if(!mbr_check(mbr)) {
     perror("Failed MBR validation check\n");
     free(mbr);
-    free(vbr);
-    free(mft);
     close(fd);
     return -1;
   }
@@ -56,17 +42,14 @@ int main(int argc, char** argv) {
   if((ntfs_start = mbr_partition_offset(mbr, NTFS_PARTITION_ID)) < 0) {
     perror("Failed to find NTFS partition\n");
     free(mbr);
-    free(vbr);
-    free(mft);
     close(fd);
     return -1;
   }
 
-  if(vbr_read(fd, vbr, ntfs_start) < 0) {
+  if((vbr = vbr_read(fd, ntfs_start)) == NULL) {
     perror("Failed to read VBR\n");
     free(mbr);
     free(vbr);
-    free(mft);
     close(fd);
     return -1;
   }
@@ -75,12 +58,11 @@ int main(int argc, char** argv) {
     perror("Failed to read VBR\n");
     free(mbr);
     free(vbr);
-    free(mft);
     close(fd);
     return -1;
   }
 
-  if(mft_read(fd, mft, mft_start) < 0) {
+  if((mft = mft_read(fd, mft_start)) == NULL) {
     perror("Failed to read MFT\n");
     free(mbr);
     free(vbr);
@@ -98,7 +80,17 @@ int main(int argc, char** argv) {
     return -1;
   }
 
+  #ifdef DEBUG
+    pad_print("MFT type:");
+    printf("%s\n", (mft_directory(mft)) ? "Directory" : "File");
+    pad_print("MFT deleted:");
+    printf("%s\n", (mft_deleted(mft)) ? "Yes" : "No");
+  #endif
+
+
   attr_next(mft);
+  attr_next(NULL);
+  attr_next(NULL);
   attr_next(NULL);
   attr_next(NULL);
   attr_next(NULL);

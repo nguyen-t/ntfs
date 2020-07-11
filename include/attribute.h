@@ -23,7 +23,7 @@ typedef enum {
   EA                    = 0x00E0u,
   PROPERTY_SET          = 0x00F0u,
   LOGGED_UTILITY_STREAM = 0x0100u
-} ATTR_ID;
+} ATTR_Type;
 
 // Common header information
 typedef struct __attribute__((packed)) {
@@ -67,6 +67,7 @@ typedef struct __attribute__((packed)) {
   uint64_t real_attribute_size;
   uint64_t initialized_stream_size;
 } ATTR_Nonresident;
+
 
 off_t attr_next(MFT*);
 
