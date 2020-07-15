@@ -11,9 +11,7 @@ int main(int argc, char** argv) {
   VBR* vbr;
   MFT* mft;
   Attribute* attr;
-
-  printf("Attribute size: %ld\n", sizeof(Attribute));
-
+  
   if(argc != 2) {
     perror("USAGE: ./main [DEVICE]\n");
     return -1;
@@ -63,7 +61,7 @@ int main(int argc, char** argv) {
       #endif
 
       if(attr->header.type == FILE_NAME) {
-        print_0030h(attr);
+        print_0030h((Attribute_Resident*) attr);
       }
       free(attr);
     } while((attr = attribute_next(NULL)) != NULL);

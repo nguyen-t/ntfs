@@ -14,5 +14,5 @@ void print_0030h(Attribute_Resident* attr) {
   for(int i = 0; i < src->name_length; i++) {
     printf("%c", src->name[i] & 0xFFu);
   }
-  printf("\n\n");
+  printf("\n");
 }
