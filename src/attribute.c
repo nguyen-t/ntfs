@@ -1,55 +1,54 @@
+#include <stddef.h>
+#include <stdlib.h>
+#include <string.h>
 #include <sys/types.h>
+#include "pad.h"
 #include "mft.h"
 #include "attribute.h"
 
-#ifdef DEBUG
-  #include <stdio.h>
-
-  // Keep print formatting consistent
-  #define pad_print(s) printf("%-25s ", (s))
-#endif
-
-off_t attr_next(MFT* mft) {
+Attribute* attribute_next(MFT* mft) {
   static MFT* current;
   static off_t offset;
-
-  if(offset >= MFT_SIZE) {
-    return -1;
-  }
+  Attribute* attr = NULL;
 
   // Works similarly to strtok()
   if(mft) {
     current = mft;
     offset = current->attribute_offset;
+  }
+  if(current) {
+    // Pointer magic to calculate body length
+    size_t size = *(uint32_t*) (current->raw + offset + offsetof(Attribute_Header, total_length));
 
-  } else if(current) {
-    ATTR_Header* header = (ATTR_Header*) &current->raw[offset];
-
-    if(header->type == 0xFFFFFFFF) {
-      return -1;
+    // Bounds checking
+    if(offset >= current->real_size) {
+      printf("Offset: %ld\n", size);
+      return NULL;
+    }
+    if(size == 0) {
+      return NULL;
+    }
+    if((attr = malloc(size)) == NULL) {
+      return NULL;
     }
 
-    #ifdef DEBUG
-      printf("\n");
-      pad_print("Attribute type:");
-      printf("0x%02x\n", header->type);
-      pad_print("Attribute length:");
-      printf("%d\n", header->total_length);
-      pad_print("Attribute name length:");
-      printf("%d\n", header->name_length);
-      pad_print("Attribute name:");
-      for(int i = 0; i < header->name_length; i++) {
-        printf("%02x ", current->raw[header->name_offset + i]);
-      }
-      printf("\n");
-      pad_print("Attribute ID:");
-      printf("0x%02x\n", header->attribute_id);
-    #endif
-
-    offset += header->total_length;
-  } else {
-    return -1;
+    memcpy(attr, current->raw + offset, size);
+    offset += size;
   }
 
-  return offset;
+  return attr;
+}
+
+void attribute_print(Attribute* attr) {
+  printf("\n");
+  pad_print("Attribute type:");
+  printf("0x%02x\n", attr->header.type);
+  pad_print("Attribute length:");
+  printf("%d\n", attr->header.total_length);
+  pad_print("Attribute name length:");
+  printf("%d\n", attr->header.name_length);
+  pad_print("Attribute name offset:");
+  printf("%d\n", attr->header.name_offset);
+  pad_print("Attribute instance:");
+  printf("0x%02x\n", attr->header.instance);
 }

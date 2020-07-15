@@ -6,7 +6,7 @@
 #include "vbr.h"
 
 #define MFT_SIZE 1024
-#define MAGIC_NUMBER (char[]) { 'F', 'I', 'L', 'E' }
+#define MFT_MAGIC (char[]) { 'F', 'I', 'L', 'E' }
 
 typedef union {
   struct __attribute__((packed)) {
@@ -29,10 +29,10 @@ typedef union {
   uint8_t raw[MFT_SIZE];
 } MFT;
 
-MFT* mft_read(int, off_t);
-MFT* mft_mirror_read(int, off_t);
+MFT* mft_next(int, off_t*);
 int mft_check(MFT*);
 int mft_directory(MFT*);
 int mft_deleted(MFT*);
+void mft_print(MFT*);
 
 #endif

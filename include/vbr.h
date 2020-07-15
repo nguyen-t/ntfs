@@ -5,6 +5,7 @@
 #include <sys/types.h>
 
 #define VBR_SIZE 512
+#define VBR_MAGIC (char[]) { 'N', 'T', 'F', 'S', ' ', ' ', ' ', ' ' }
 
 // NTFS Boot Sector structure
 typedef union {
@@ -50,6 +51,6 @@ typedef union {
 
 VBR* vbr_read(int, off_t);
 off_t vbr_mft_offset(VBR*, off_t);
-off_t vbr_mirror_offset(VBR*, off_t);
+int vbr_check(VBR*);
 
 #endif

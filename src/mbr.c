@@ -5,15 +5,8 @@
 #include <sys/types.h>
 #include "mbr.h"
 
-#ifdef DEBUG
-  #include <stdio.h>
-
-  // Keep print formatting consistent
-  #define pad_print(s) printf("%-25s ", (s))
-#endif
-
 MBR* mbr_read(int fd) {
-  MBR* mbr = malloc(sizeof(MBR));
+  MBR* mbr;
   off_t current;
 
   // Save current file pointer
@@ -24,11 +17,20 @@ MBR* mbr_read(int fd) {
   if(lseek(fd, 0, SEEK_SET) < 0) {
     return NULL;
   }
+  if((mbr = malloc(sizeof(MBR))) == NULL) {
+    return NULL;
+  }
   if(read(fd, mbr->raw, sizeof(MBR)) < 0) {
+    free(mbr);
     return NULL;
   }
   // Reset file pointer
   if(lseek(fd, current, SEEK_SET) < 0) {
+    free(mbr);
+    return NULL;
+  }
+  if(!mbr_check(mbr)) {
+    free(mbr);
     return NULL;
   }
 

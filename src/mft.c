@@ -1,14 +1,25 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <stdarg.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include "pad.h"
 #include "vbr.h"
 #include "mft.h"
 
-MFT* mft_read(int fd, off_t offset) {
-  MFT* mft = malloc(sizeof(MFT));
+MFT* mft_next(int fd, off_t* reset) {
+  static off_t offset = -1;
+  MFT* mft;
   off_t current;
 
+  // Works like strtok()
+  if(reset) {
+    offset = *reset;
+  }
+  if(offset == -1) {
+    return NULL;
+  }
   // Save current file pointer
   if((current = lseek(fd, 0, SEEK_CUR)) < 0) {
     return NULL;
@@ -17,43 +28,31 @@ MFT* mft_read(int fd, off_t offset) {
   if(lseek(fd, offset, SEEK_SET) < 0)  {
     return NULL;
   }
+  if((mft = malloc(sizeof(MFT))) == NULL) {
+    return NULL;
+  }
   if(read(fd, mft->raw, sizeof(MFT)) < 0) {
+    free(mft);
     return NULL;
   }
   // Reset file pointer
   if(lseek(fd, current, SEEK_SET) < 0) {
+    free(mft);
+    return NULL;
+  }
+  if(!mft_check(mft)) {
+    free(mft);
     return NULL;
   }
 
-  return mft;
-}
-
-MFT* mft_mirror_read(int fd, off_t offset) {
-  MFT* mft = malloc(sizeof(MFT));
-  off_t current;
-
-  // Save current file pointer
-  if((current = lseek(fd, 0, SEEK_CUR)) < 0) {
-    return NULL;
-  }
-  // Find and read MFT mirror
-  if(lseek(fd, offset, SEEK_SET) < 0) {
-    return NULL;
-  }
-  if(read(fd, mft->raw, sizeof(MFT)) < 0) {
-    return NULL;
-  }
-  // Reset file pointer
-  if(lseek(fd, current, SEEK_SET) < 0) {
-    return NULL;
-  }
+  offset += 1024;
 
   return mft;
 }
 
 int mft_check(MFT* mft) {
   // Pointer magic
-  return *(uint32_t*) mft->magic_number == *(uint32_t*) MAGIC_NUMBER;
+  return *(uint32_t*) mft->magic_number == *(uint32_t*) MFT_MAGIC;
 }
 
 int mft_directory(MFT* mft) {
@@ -62,4 +61,21 @@ int mft_directory(MFT* mft) {
 
 int mft_deleted(MFT* mft) {
   return (mft->flags & 0x0001u) == 0;
+}
+
+void mft_print(MFT* mft) {
+  printf("\n");
+  pad_print("MFT magic number:");
+  for(int i = 0; i < 4; i++) {
+    printf("%c", mft->magic_number[i]);
+  }
+  printf("\n");
+  pad_print("MFT deleted:");
+  printf("%s\n", (mft_deleted(mft)) ? "Yes" : "No");
+  pad_print("MFT type:");
+  printf("%s\n", (mft_directory(mft)) ? "Directory" : "File");
+  pad_print("MFT real size:");
+  printf("%d\n", mft->real_size);
+  pad_print("MFT allocated size:");
+  printf("%d\n", mft->allocated_size);
 }

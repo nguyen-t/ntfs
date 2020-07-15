@@ -23,52 +23,46 @@ typedef enum {
   EA                    = 0x00E0u,
   PROPERTY_SET          = 0x00F0u,
   LOGGED_UTILITY_STREAM = 0x0100u
-} ATTR_Type;
+} Attribute_Def;
 
-// Common header information
+// Generic attribute
 typedef struct __attribute__((packed)) {
   uint32_t type;
   uint32_t total_length;
-  uint8_t nonresident_flag;
+  uint8_t form_code;
   uint8_t name_length;
   uint16_t name_offset;
   uint16_t flags;
-  uint16_t attribute_id;
-} ATTR_Header;
+  uint16_t instance;
+} Attribute_Header;
 
 typedef struct __attribute__((packed)) {
-  uint32_t type;
-  uint32_t total_length;
-  uint8_t nonresident_flag;
-  uint8_t name_length;
-  uint16_t name_offset;
-  uint16_t flags;
-  uint16_t attribute_id;
+  Attribute_Header header;
+  uint8_t data[];
+} Attribute;
+
+typedef struct __attribute__((packed)) {
+  Attribute_Header header;
   uint32_t attribute_length;
-  uint16_t attribute_offset;
-  uint8_t indexed_flag;
-  uint8_t padding;
-} ATTR_Resident;
+  uint32_t attribute_offset;
+  uint8_t reserved[2];
+  uint8_t data[];
+} Attribute_Resident;
 
 typedef struct __attribute__((packed)) {
-  uint32_t type;
-  uint32_t total_length;
-  uint8_t nonresident_flag;
-  uint8_t name_length;
-  uint16_t name_offset;
-  uint16_t flags;
-  uint16_t attribute_id;
-  uint64_t start_vcn;
-  uint64_t end_vcn;
-  uint16_t data_runs_offset;
-  uint16_t compression_unit_size;
-  uint32_t padding;
-  uint64_t allocated_attribute_size;
-  uint64_t real_attribute_size;
-  uint64_t initialized_stream_size;
-} ATTR_Nonresident;
+  Attribute_Header header;
+  uint64_t vcn_low;
+  uint64_t vcn_high;
+  uint16_t mapping_pair_offset;
+  uint8_t reserved[6];
+  uint64_t allocated_length;
+  uint64_t file_size;
+  uint64_t valid_data_length;
+  uint64_t total_allocated;
+  uint8_t data[];
+} Attribute_Nonresident;
 
-
-off_t attr_next(MFT*);
+Attribute* attribute_next(MFT*);
+void attribute_print(Attribute*);
 
 #endif
