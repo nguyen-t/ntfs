@@ -6,7 +6,7 @@
 
 int main(int argc, char** argv) {
   int fd;
-  off_t offset;
+  int partition;
   MBR* mbr;
   VBR* vbr;
   MFT* mft;
@@ -25,13 +25,11 @@ int main(int argc, char** argv) {
     close(fd);
     return -1;
   }
-  if((offset = mbr_partition_offset(mbr, NTFS_PARTITION_ID)) < 0) {
-    perror("Failed to find NTFS partition\n");
-    free(mbr);
-    close(fd);
-    return -1;
-  }
-  if((vbr = vbr_read(fd, offset)) == NULL) {
+  do {
+    mbr_partition_list(mbr);
+    printf("Which partition? ");
+  } while(scanf(" %d", &partition) != 1 || partition < 1 || partition > 4);
+  if((vbr = vbr_read(fd, mbr_partition_offset(mbr, partition))) == NULL) {
     perror("Failed to read VBR\n");
     free(mbr);
     free(vbr);

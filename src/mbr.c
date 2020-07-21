@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <unistd.h>
@@ -41,21 +42,18 @@ int mbr_check(MBR* mbr) {
   return mbr->boot_signature == VALID_SIGNATURE;
 }
 
-off_t mbr_partition_offset(MBR* mbr, uint8_t partition_id) {
+void mbr_partition_list(MBR* mbr) {
   for(int i = 0; i < MAX_PARTITIONS; i++) {
-    uint8_t type = mbr->partitions[i].type;
-    off_t offset = mbr->partitions[i].lba;
-
-    if(type == partition_id) {
-
-      // #ifdef DEBUG
-      //   pad_print("Partition location:");
-      //   printf("0x%08x\n", offset * SECTOR_SIZE);
-      // #endif
-
-      return offset * SECTOR_SIZE;
+    if(mbr->partitions[i].size > 0) {
+      printf("Partition no.:  %d\n", i + 1);
+      printf("Partition type: 0x%02x\n", mbr->partitions[i].type);
     }
   }
+}
 
-  return -1;
+off_t mbr_partition_offset(MBR* mbr, uint8_t num) {
+  if(num < 1 || num > 4) {
+    return 0;
+  }
+  return mbr->partitions[num - 1].lba * SECTOR_SIZE;
 }
