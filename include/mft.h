@@ -29,7 +29,7 @@ typedef union {
   uint8_t raw[MFT_SIZE];
 } MFT;
 
-MFT* mft_next(int, off_t*);
+MFT* mft_next(int, VBR*);
 int mft_check(MFT*);
 int mft_directory(MFT*);
 int mft_deleted(MFT*);

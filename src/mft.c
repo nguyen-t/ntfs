@@ -8,14 +8,14 @@
 #include "vbr.h"
 #include "mft.h"
 
-MFT* mft_next(int fd, off_t* reset) {
+MFT* mft_next(int fd, VBR* reset) {
   static off_t offset = -1;
   MFT* mft;
   off_t current;
 
   // Works like strtok()
   if(reset) {
-    offset = *reset;
+    offset = vbr_mft_offset(reset);
   }
   if(offset == -1) {
     return NULL;

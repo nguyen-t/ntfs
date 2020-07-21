@@ -50,7 +50,7 @@ typedef union {
 } VBR;
 
 VBR* vbr_read(int, off_t);
-off_t vbr_mft_offset(VBR*, off_t);
+off_t vbr_mft_offset(VBR*);
 int vbr_check(VBR*);
 
 #endif

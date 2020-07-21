@@ -38,18 +38,13 @@ VBR* vbr_read(int fd, off_t offset) {
   return vbr;
 }
 
-off_t vbr_mft_offset(VBR* vbr, off_t offset) {
+off_t vbr_mft_offset(VBR* vbr) {
   uint16_t sector_size = vbr->bpb.bytes_per_sector;
   uint8_t cluster_size = vbr->bpb.sectors_per_cluster;
   uint64_t mft_cluster = vbr->ebpb.mft_cluster_number;
-  off_t mft_start      = sector_size * cluster_size * mft_cluster + offset;
+  off_t offset         = vbr->bpb.hidden_sectors;
 
-  #ifdef DEBUG
-    pad_print("MFT start:");
-    printf("0x%08lx\n", mft_start);
-  #endif
-
-  return mft_start;
+  return sector_size * (cluster_size * mft_cluster + offset);
 }
 
 int vbr_check(VBR* vbr) {
