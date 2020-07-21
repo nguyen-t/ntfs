@@ -59,14 +59,12 @@ int main(int argc, char** argv) {
       free(attr);
     } while((attr = attribute_next(NULL)) != NULL);
 
-    free(attr);
     free(mft);
   } while((mft = mft_next(fd, NULL)) != NULL);
 
   free(mbr);
   free(vbr);
   free(mft);
-
   close(fd);
 
   return 0;
