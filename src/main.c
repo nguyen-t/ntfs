@@ -12,9 +12,16 @@ int main(int argc, char** argv) {
   MFT* mft;
   Attribute* attr;
 
-  if(argc != 2) {
-    perror("USAGE: ./main [DEVICE]\n");
-    return -1;
+  switch(argc) {
+    case 2:
+      partition = 0;
+      break;
+    case 3:
+      partition = strtol(argv[2], NULL, 10);
+      break;
+    default:
+      perror("USAGE: ./main [DEVICE] [PARTITION]\n");
+      return -1;
   }
   if((fd = open(argv[1], O_RDWR)) < 0) {
     perror("Failed to open device\n");
@@ -26,10 +33,12 @@ int main(int argc, char** argv) {
     return -1;
   }
   // Ask for partition type
-  do {
-    mbr_partition_list(mbr);
-    printf("Which partition? ");
-  } while(scanf(" %d", &partition) != 1 || partition < 1 || partition > 4);
+  if(partition < 1 || partition > 4) {
+    do {
+      mbr_partition_list(mbr);
+      printf("Which partition? ");
+    } while(scanf(" %d", &partition) != 1 || partition < 1 || partition > 4);
+  }
   if((vbr = vbr_read(fd, mbr_partition_offset(mbr, partition))) == NULL) {
     perror("Failed to read VBR\n");
     free(mbr);
@@ -69,7 +78,6 @@ int main(int argc, char** argv) {
 
   free(mbr);
   free(vbr);
-  free(mft);
   close(fd);
 
   return 0;
