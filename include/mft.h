@@ -5,8 +5,7 @@
 #include <sys/types.h>
 #include "vbr.h"
 
-#define MFT_SIZE 1024
-#define MFT_MAGIC (char[]) { 'F', 'I', 'L', 'E' }
+#define MFT_MAGIC (char*) "FILE"
 
 typedef struct __attribute__((packed)) {
     uint8_t magic_number[4];

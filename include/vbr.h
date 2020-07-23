@@ -4,8 +4,7 @@
 #include <stdint.h>
 #include <sys/types.h>
 
-#define VBR_SIZE 512
-#define VBR_MAGIC (char[]) { 'N', 'T', 'F', 'S', ' ', ' ', ' ', ' ' }
+#define VBR_MAGIC (char*) "NTFS    "
 
 // NTFS Boot Sector structure
 typedef struct __attribute__((packed)) {
@@ -49,5 +48,6 @@ typedef struct __attribute__((packed)) {
 VBR* vbr_read(int, off_t);
 off_t vbr_mft_offset(VBR*);
 int vbr_check(VBR*);
+void vbr_print(VBR*);
 
 #endif

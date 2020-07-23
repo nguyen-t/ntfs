@@ -4,7 +4,6 @@
 #include <stdint.h>
 #include <sys/types.h>
 
-#define MBR_SIZE          512
 #define SECTOR_SIZE       512
 #define MAX_PARTITIONS    4
 #define VALID_SIGNATURE   0xAA55
@@ -28,5 +27,6 @@ MBR* mbr_read(int);
 int mbr_check(MBR*);
 void mbr_partition_list(MBR*);
 off_t mbr_partition_offset(MBR*, uint8_t);
+void mbr_print(MBR*);
 
 #endif

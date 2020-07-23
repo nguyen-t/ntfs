@@ -12,11 +12,11 @@ typedef struct __attribute__((packed)) {
 typedef struct __attribute__((packed)) {
   File_Reference parent_dir;
   uint8_t reserved[0x38u];
-  uint8_t name_length;
-  uint8_t flags;
+  uint8_t file_name_length;
+  uint8_t file_name_flags;
   uint16_t name[];
 } Type_0030h;
 
-void print_0030h(Attribute_Resident*);
+void print_0030h(Attribute*);
 
 #endif

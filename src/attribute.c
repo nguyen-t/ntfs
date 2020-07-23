@@ -1,8 +1,8 @@
+#include <stdio.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
-#include "pad.h"
 #include "mft.h"
 #include "attribute.h"
 
@@ -39,15 +39,12 @@ Attribute* attribute_next(MFT* mft) {
 }
 
 void attribute_print(Attribute* attr) {
+  printf("Unclassified MFT Record\n");
+  printf("Record type:        0x%04x\n", attr->header.type);
+  printf("Record length:      %d\n", attr->header.total_length);
+  printf("Record form code:   %s\n", (attr->header.form_code) ? "Nonresident" : "resident");
+  printf("Record name length: %d\n", attr->header.name_length);
+  printf("Record flags:       0x%04x\n", attr->header.flags);
+  printf("Record instance:    0x%04x\n", attr->header.instance);
   printf("\n");
-  pad_print("Attribute type:");
-  printf("0x%02x\n", attr->header.type);
-  pad_print("Attribute length:");
-  printf("%d\n", attr->header.total_length);
-  pad_print("Attribute name length:");
-  printf("%d\n", attr->header.name_length);
-  pad_print("Attribute name offset:");
-  printf("%d\n", attr->header.name_offset);
-  pad_print("Attribute instance:");
-  printf("0x%02x\n", attr->header.instance);
 }

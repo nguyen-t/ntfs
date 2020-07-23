@@ -38,6 +38,12 @@ int main(int argc, char** argv) {
     return -1;
   }
 
+  #ifdef DEBUG
+    printf("\n");
+    mbr_print(mbr);
+    vbr_print(vbr);
+  #endif
+
   mft = mft_next(fd, vbr);
 
   do {
@@ -49,12 +55,12 @@ int main(int argc, char** argv) {
 
     do {
       #ifdef DEBUG
-        attribute_print(attr);
+        if(attr->header.type == FILE_NAME) {
+          print_0030h(attr);
+        } else {
+          attribute_print(attr);
+        }
       #endif
-
-      if(attr->header.type == FILE_NAME) {
-        print_0030h((Attribute_Resident*) attr);
-      }
       free(attr);
     } while((attr = attribute_next(NULL)) != NULL);
 

@@ -57,3 +57,16 @@ off_t mbr_partition_offset(MBR* mbr, uint8_t num) {
   }
   return mbr->partitions[num - 1].lba * SECTOR_SIZE;
 }
+
+void mbr_print(MBR* mbr) {
+  printf("Master Boot Record\n");
+  printf("Partition signature: 0x%04x\n", mbr->boot_signature);
+  for(int i = 0; i < 4; i++) {
+    printf("Partition %d\n", i + 1);
+    printf("    Partition type ID:  0x%02x\n", mbr->partitions[i].type);
+    printf("    Partition bootable: %s\n", (mbr->partitions[i].boot_status) ? "Yes" : "No");
+    printf("    LBA start sector:   0x%08x\n", mbr->partitions[i].lba);
+    printf("    LBA no. of sectors: 0x%08x\n", mbr->partitions[i].size);
+  }
+  printf("\n");
+}

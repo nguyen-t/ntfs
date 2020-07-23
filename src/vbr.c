@@ -3,7 +3,6 @@
 #include <stdint.h>
 #include <unistd.h>
 #include <sys/types.h>
-#include "pad.h"
 #include "vbr.h"
 
 VBR* vbr_read(int fd, off_t offset) {
@@ -50,4 +49,24 @@ off_t vbr_mft_offset(VBR* vbr) {
 int vbr_check(VBR* vbr) {
   // Pointer magic
   return *(uint64_t*) vbr->oem_id == *(uint64_t*) VBR_MAGIC;
+}
+
+void vbr_print(VBR* vbr) {
+  printf("Volume Boot Record\n");
+  printf("OEM ID:               %.8s\n", vbr->oem_id);
+  printf("End of sector marker: 0x%04x\n", vbr->end_of_sector_marker);
+  printf("BIOS parameter block\n");
+  printf("    Bytes per sector:          %d\n", vbr->bpb.bytes_per_sector);
+  printf("    Sectors per cluster:       %d\n", vbr->bpb.sectors_per_cluster);
+  printf("    Sectors per track:         %d\n", vbr->bpb.sectors_per_track);
+  printf("    Number of heads:           %d\n", vbr->bpb.number_of_heads);
+  printf("    Media descriptor:          0x%02x\n", vbr->bpb.media_descriptor);
+  printf("    Hidden sectors:            0x%08x\n", vbr->bpb.hidden_sectors);
+  printf("Extended BIOS parameter block\n");
+  printf("    Total sectors:             %ld\n", vbr->ebpb.total_sectors);
+  printf("    MFT cluster number:        %ld\n", vbr->ebpb.mft_cluster_number);
+  printf("    Mirror MFT cluster number: %ld\n", vbr->ebpb.mft_mirror_cluster_number);
+  printf("    Volume serial number       0x%16lx\n", vbr->ebpb.volume_serial_number);
+  printf("    Checksum:                  0x%08x\n", vbr->ebpb.checksum);
+  printf("\n");
 }

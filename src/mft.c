@@ -4,7 +4,6 @@
 #include <stdarg.h>
 #include <unistd.h>
 #include <sys/types.h>
-#include "pad.h"
 #include "vbr.h"
 #include "mft.h"
 
@@ -64,18 +63,19 @@ int mft_deleted(MFT* mft) {
 }
 
 void mft_print(MFT* mft) {
+  printf("Master File Table\n");
+  printf("Magic number:            %.4s\n", mft->magic_number);
+  printf("Update sequence offset:  0x%04x\n", mft->update_sequence_offset);
+  printf("Fixup length:            %d\n", mft->fixup_length);
+  printf("Logfile sequence number: 0x%016lx\n", mft->logfile_sequence_number);
+  printf("Sequence number:         0x%04x\n", mft->sequence_number);
+  printf("Hard link count:         %d\n", mft->hard_link_count);
+  printf("Record offset:           0x%04x\n", mft->attribute_offset);
+  printf("Flags:                   0x%04x\n", mft->flags);
+  printf("Real size:               0x%08x\n", mft->real_size);
+  printf("Allocated size:          0x%08x\n", mft->allocated_size);
+  printf("Base reference:          0x%016lx\n", mft->base_reference);
+  printf("Next attribute ID:       0x%04x\n", mft->next_attribute_id);
+  printf("MFT no.:                 0x%08x\n", mft->mft_no);
   printf("\n");
-  pad_print("MFT magic number:");
-  for(int i = 0; i < 4; i++) {
-    printf("%c", mft->magic_number[i]);
-  }
-  printf("\n");
-  pad_print("MFT deleted:");
-  printf("%s\n", (mft_deleted(mft)) ? "Yes" : "No");
-  pad_print("MFT type:");
-  printf("%s\n", (mft_directory(mft)) ? "Directory" : "File");
-  pad_print("MFT real size:");
-  printf("%d\n", mft->real_size);
-  pad_print("MFT allocated size:");
-  printf("%d\n", mft->allocated_size);
 }

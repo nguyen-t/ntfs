@@ -43,8 +43,8 @@ typedef struct __attribute__((packed)) {
 
 typedef struct __attribute__((packed)) {
   Attribute_Header header;
-  uint32_t attribute_length;
-  uint32_t attribute_offset;
+  uint32_t value_length;
+  uint32_t value_offset;
   uint8_t reserved[2];
   uint8_t data[];
 } Attribute_Resident;
