@@ -8,8 +8,7 @@
 #define MFT_SIZE 1024
 #define MFT_MAGIC (char[]) { 'F', 'I', 'L', 'E' }
 
-typedef union {
-  struct __attribute__((packed)) {
+typedef struct __attribute__((packed)) {
     uint8_t magic_number[4];
     uint16_t update_sequence_offset;
     uint16_t fixup_length;
@@ -25,8 +24,6 @@ typedef union {
     uint16_t boundary_align;
     uint32_t mft_no;
     uint8_t body[976];
-  };
-  uint8_t raw[MFT_SIZE];
 } MFT;
 
 MFT* mft_next(int, VBR*);

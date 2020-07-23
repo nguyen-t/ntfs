@@ -25,6 +25,7 @@ int main(int argc, char** argv) {
     close(fd);
     return -1;
   }
+  // Ask for partition type
   do {
     mbr_partition_list(mbr);
     printf("Which partition? ");

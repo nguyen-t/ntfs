@@ -14,15 +14,14 @@ Attribute* attribute_next(MFT* mft) {
   // Works similarly to strtok()
   if(mft) {
     current = mft;
-    offset = current->attribute_offset;
+    offset = current->attribute_offset - offsetof(MFT, body);
   }
   if(current) {
     // Pointer magic to calculate body length
-    size_t size = *(uint32_t*) (current->raw + offset + offsetof(Attribute_Header, total_length));
+    size_t size = *(uint32_t*) (current->body + offset + offsetof(Attribute_Header, total_length));
 
     // Bounds checking
-    if(offset >= current->real_size) {
-      printf("Offset: %ld\n", size);
+    if((offset + offsetof(MFT, body)) >= current->real_size) {
       return NULL;
     }
     if(size == 0) {
@@ -32,7 +31,7 @@ Attribute* attribute_next(MFT* mft) {
       return NULL;
     }
 
-    memcpy(attr, current->raw + offset, size);
+    memcpy(attr, current->body + offset, size);
     offset += size;
   }
 

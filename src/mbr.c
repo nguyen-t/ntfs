@@ -21,7 +21,7 @@ MBR* mbr_read(int fd) {
   if((mbr = malloc(sizeof(MBR))) == NULL) {
     return NULL;
   }
-  if(read(fd, mbr->raw, sizeof(MBR)) < 0) {
+  if(read(fd, mbr, sizeof(MBR)) < 0) {
     free(mbr);
     return NULL;
   }

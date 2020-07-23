@@ -31,7 +31,7 @@ MFT* mft_next(int fd, VBR* reset) {
   if((mft = malloc(sizeof(MFT))) == NULL) {
     return NULL;
   }
-  if(read(fd, mft->raw, sizeof(MFT)) < 0) {
+  if(read(fd, mft, sizeof(MFT)) < 0) {
     free(mft);
     return NULL;
   }

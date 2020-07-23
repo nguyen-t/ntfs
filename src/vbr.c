@@ -21,7 +21,7 @@ VBR* vbr_read(int fd, off_t offset) {
   if((vbr = malloc(sizeof(VBR))) == NULL) {
     return NULL;
   }
-  if(read(fd, vbr->raw, sizeof(VBR)) < 0) {
+  if(read(fd, vbr, sizeof(VBR)) < 0) {
     free(vbr);
     return NULL;
   }
@@ -42,7 +42,7 @@ off_t vbr_mft_offset(VBR* vbr) {
   uint16_t sector_size = vbr->bpb.bytes_per_sector;
   uint8_t cluster_size = vbr->bpb.sectors_per_cluster;
   uint64_t mft_cluster = vbr->ebpb.mft_cluster_number;
-  off_t offset         = vbr->bpb.hidden_sectors;
+  off_t offset = vbr->bpb.hidden_sectors;
 
   return sector_size * (cluster_size * mft_cluster + offset);
 }

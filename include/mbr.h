@@ -18,13 +18,10 @@ typedef struct __attribute__((packed)) {
   uint32_t size;
 } Partition_Table;
 
-typedef union {
-  struct __attribute__((packed)) {
-    uint8_t bootstrap_code[446];
-    Partition_Table partitions[4];
-    uint16_t boot_signature;
-  };
-  uint8_t raw[MBR_SIZE];
+typedef struct __attribute__((packed)) {
+  uint8_t bootstrap_code[446];
+  Partition_Table partitions[4];
+  uint16_t boot_signature;
 } MBR;
 
 MBR* mbr_read(int);
