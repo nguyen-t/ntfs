@@ -23,6 +23,7 @@ int main(int argc, char** argv) {
       perror("USAGE: ./main [DEVICE] [PARTITION]\n");
       return -1;
   }
+
   if((fd = open(argv[1], O_RDWR)) < 0) {
     perror("Failed to open device\n");
     return -1;
@@ -32,13 +33,14 @@ int main(int argc, char** argv) {
     close(fd);
     return -1;
   }
+
   // Ask for partition type
-  if(partition < 1 || partition > 4) {
-    do {
-      mbr_partition_list(mbr);
-      printf("Which partition? ");
-    } while(scanf(" %d", &partition) != 1 || partition < 1 || partition > 4);
+  while(partition < 1 || partition > 4) {
+    mbr_partition_list(mbr);
+    printf("Which partition? ");
+    scanf(" %d", &partition);
   }
+
   if((vbr = vbr_read(fd, mbr_partition_offset(mbr, partition))) == NULL) {
     perror("Failed to read VBR\n");
     free(mbr);
@@ -64,11 +66,7 @@ int main(int argc, char** argv) {
 
     do {
       #ifdef DEBUG
-        if(attr->header.type == FILE_NAME) {
-          print_0030h(attr);
-        } else {
-          attribute_print(attr);
-        }
+        attribute_print(attr);
       #endif
       free(attr);
     } while((attr = attribute_next(NULL)) != NULL);

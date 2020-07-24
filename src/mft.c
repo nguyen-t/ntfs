@@ -70,10 +70,10 @@ void mft_print(MFT* mft) {
   printf("Logfile sequence number: 0x%016lx\n", mft->logfile_sequence_number);
   printf("Sequence number:         0x%04x\n", mft->sequence_number);
   printf("Hard link count:         %d\n", mft->hard_link_count);
-  printf("Record offset:           0x%04x\n", mft->attribute_offset);
+  printf("Attribute offset:        0x%04x\n", mft->attribute_offset);
   printf("Flags:                   0x%04x\n", mft->flags);
-  printf("Real size:               0x%08x\n", mft->real_size);
-  printf("Allocated size:          0x%08x\n", mft->allocated_size);
+  printf("Real size:               0x%d\n", mft->real_size);
+  printf("Allocated size:          0x%d\n", mft->allocated_size);
   printf("Base reference:          0x%016lx\n", mft->base_reference);
   printf("Next attribute ID:       0x%04x\n", mft->next_attribute_id);
   printf("MFT no.:                 0x%08x\n", mft->mft_no);
