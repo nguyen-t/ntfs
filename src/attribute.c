@@ -63,7 +63,6 @@ void print_nonresident(Attribute* attr) {
   printf("    Data offset:      0x%04x\n", res->data_offset);
   printf("    Allocated length: %ld\n", res->allocated_length);
   printf("    Real length:      %ld\n", res->real_length);
-  // printf("    Total Allocated:  %ld\n", res->total_allocated);
 }
 
 void print_0010h(Attribute* attr) {

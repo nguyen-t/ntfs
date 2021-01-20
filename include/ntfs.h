@@ -11,7 +11,7 @@
 #include "mft.h"
 #include "attribute.h"
 
-#define NTFS_PARTITION_ID 0x07u
+#define PARTITION_NTFS 0x07u
 
 // Debug stuff
 #ifdef NDEBUG
